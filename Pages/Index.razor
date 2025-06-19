@@ -1,6 +1,9 @@
 @page "/"
-@inject IJSRuntime JS
+@inject IDialogService DialogService
 @using MudBlazor
+@using ChartJs.Blazor.BarChart
+@using ChartJs.Blazor.PieChart
+@using ChartJs.Blazor.Util
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -41,30 +44,15 @@
         </MudItem>
     </MudGrid>
 
-    <!-- 🔹 Gráficos -->
-    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Meta para el año</MudText>
-        <canvas id="graficoMetas" height="250"></canvas>
-    </MudPaper>
-
+    <!-- 🔹 Gráficos en Blazor puro -->
     <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
         <MudText Typo="Typo.h6" Align="Align.Center">Ingresos vs Gastos</MudText>
-        <canvas id="graficoLineal" height="250"></canvas>
+        <BarChart Config="@BarConfig" Style="height: 300px;" />
     </MudPaper>
 
     <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
         <MudText Typo="Typo.h6" Align="Align.Center">Ingresos Totales</MudText>
-        <canvas id="graficoDonaIngresos" height="250"></canvas>
-    </MudPaper>
-
-    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Gastos Totales</MudText>
-        <canvas id="graficoDonaGastos" height="250"></canvas>
-    </MudPaper>
-
-    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Subcategorías</MudText>
-        <canvas id="graficoSubcategoria" height="250"></canvas>
+        <PieChart Config="@DonaIngresosConfig" Style="height: 300px;" />
     </MudPaper>
 </MudContainer>
 
@@ -111,15 +99,62 @@
         ("Ahorros", "$600.00", "assets/icons/ahorro.png")
     };
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JS.InvokeVoidAsync("initCharts");
-        }
-    }
+    private BarConfig BarConfig;
+    private PieConfig DonaIngresosConfig;
 
-    [Inject] IDialogService DialogService { get; set; }
+    protected override void OnInitialized()
+    {
+        BarConfig = new BarConfig
+        {
+            Options = new BarOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle { Display = false }
+            },
+            Data = new BarData
+            {
+                Labels = new[] { "Enero", "Febrero", "Marzo", "Abril" },
+                Datasets = new List<BarDataset<double>>
+                {
+                    new BarDataset<double>(new[] { 2000.0, 2200.0, 2500.0, 2100.0 })
+                    {
+                        Label = "Ingresos",
+                        BackgroundColor = new[] { ColorUtil.ColorHexString(Colors.Blue.Default) }
+                    },
+                    new BarDataset<double>(new[] { 1200.0, 1500.0, 1400.0, 1600.0 })
+                    {
+                        Label = "Gastos",
+                        BackgroundColor = new[] { ColorUtil.ColorHexString(Colors.Red.Default) }
+                    }
+                }
+            }
+        };
+
+        DonaIngresosConfig = new PieConfig
+        {
+            Options = new PieOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle { Display = false }
+            },
+            Data = new PieData
+            {
+                Labels = new[] { "Salario", "Freelance", "Otros" },
+                Datasets = new List<PieDataset<double>>
+                {
+                    new PieDataset<double>(new[] { 4000.0, 1500.0, 500.0 })
+                    {
+                        BackgroundColor = new[]
+                        {
+                            ColorUtil.ColorHexString(Colors.Green.Accent4),
+                            ColorUtil.ColorHexString(Colors.Yellow.Default),
+                            ColorUtil.ColorHexString(Colors.Grey.Darken1)
+                        }
+                    }
+                }
+            }
+        };
+    }
 
     private async Task AbrirModal(string titulo, string url)
     {
