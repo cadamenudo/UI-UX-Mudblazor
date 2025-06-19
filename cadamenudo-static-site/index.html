@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | CadaMenudo</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+</head>
+<body>
+  <main style="padding: 1rem;">
+    <h2>Meta para el año</h2>
+    <canvas id="graficoMetas" height="250"></canvas>
+
+    <h2>Ingresos vs Gastos</h2>
+    <canvas id="graficoLineal" height="250"></canvas>
+
+    <h2>Ingresos Totales</h2>
+    <canvas id="graficoDonaIngresos" height="250"></canvas>
+
+    <h2>Gastos Totales</h2>
+    <canvas id="graficoDonaGastos" height="250"></canvas>
+
+    <h2>Subcategorías</h2>
+    <canvas id="graficoSubcategoria" height="250"></canvas>
+  </main>
+
+  <footer class="navbar">
+    <div class="nav-item">
+      <img src="assets/icons/home.png" />
+      <span>Inicio</span>
+    </div>
+    <div class="nav-item">
+      <img src="assets/icons/transacciones.png" />
+      <span>Transacciones</span>
+    </div>
+    <div class="nav-item nav-item-nuevo">
+      <div class="boton-registrar">
+        <img src="assets/icons/nueva.png" />
+      </div>
+      <span>Registrar</span>
+    </div>
+    <div class="nav-item">
+      <img src="assets/icons/metas.png" />
+      <span>Metas</span>
+    </div>
+    <div class="nav-item">
+      <img src="assets/icons/buscar.png" />
+      <span>Buscar</span>
+    </div>
+  </footer>
+
+  <div class="footer-legales">
+    <button onclick="alert('Términos')">Términos</button>
+    <button onclick="alert('Política de Privacidad')">Política de Privacidad</button>
+    <a href="mailto:tech@cadamenudo.com">tech@cadamenudo.com</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/chart-setup.js"></script>
+</body>
+</html>
