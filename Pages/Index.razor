@@ -1,25 +1,99 @@
+<style>
+  .greycliff {
+        font-family: 'Greycliff CF', sans-serif;
+    }
+
+    .header-bar {
+        background-color: #594AE2;
+        padding: 1rem 2rem;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+
+    .logo {
+        height: 30px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+    }
+
+.resumen-box {
+    background-color: white;
+    border-radius: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-top: 0.5rem;     
+    margin-bottom: 1.25rem;
+}
+
+
+    .resumen-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .resumen-icono {
+        width: 40px;
+        height: 40px;
+        background: #f2f2f2;
+        border-radius: 50%;
+        padding: 6px;
+    }
+
+    .resumen-texto {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+    }
+
+    .resumen-monto {
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+</style>
+
 <MudThemeProvider />
 <MudDialogProvider />
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="pa-4">
-    <MudText Typo="Typo.h5" GutterBottom>Hola Xavier</MudText>
+<!-- 🔹 Header personalizado -->
+<div class="header-bar greycliff">
+    <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada-menudo-logo-white.png" alt="Logo" class="logo" />
+    <div class="user-info">
+        <span>Hola Xavier</span>
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" class="user-avatar" />
+    </div>
+</div>
 
-    <!-- 🔹 Botón para abrir términos -->
-<MudButton Variant="Variant.Filled" OnClick='@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))'></MudButton>
+<!-- 🔹 Contenido general -->
+<MudContainer MaxWidth="MaxWidth.Large" Class="pa-4 greycliff">
 
-    <!-- 🔹 Resumen -->
-    <MudPaper Class="pa-4 my-2" Style="border-radius: 16px;">
+    <!-- 🔹 Resumen estilizado -->
+    <MudPaper Class="resumen-box">
         <MudGrid>
             @foreach (var item in Resumen)
             {
-                <MudItem xs="4">
-                    <MudStack Direction="Row" AlignItems="AlignItems.Center" Spacing="2">
-                        <MudAvatar Image="@item.Icon" Size="Size.Medium" />
-                        <MudStack>
-                            <MudText Typo="Typo.caption">@item.Nombre</MudText>
-                            <MudText Typo="Typo.subtitle2" Bold="true">@item.Valor</MudText>
-                        </MudStack>
-                    </MudStack>
+                <MudItem Xs="4">
+                    <div class="resumen-item">
+                        <img src="@item.Icon" class="resumen-icono" />
+                        <div class="resumen-texto">
+                            <span>@item.Nombre</span>
+                            <span class="resumen-monto">@item.Valor</span>
+                        </div>
+                    </div>
                 </MudItem>
             }
         </MudGrid>
@@ -32,10 +106,10 @@
 
     <!-- 🔹 Fecha -->
     <MudGrid Class="my-3">
-        <MudItem xs="6">
+        <MudItem Xs="6">
             <MudDatePicker Label="Desde" Date="@FechaDesde" DateChanged="@(v => FechaDesde = v)" />
         </MudItem>
-        <MudItem xs="6">
+        <MudItem Xs="6">
             <MudDatePicker Label="Hasta" Date="@FechaHasta" DateChanged="@(v => FechaHasta = v)" />
         </MudItem>
     </MudGrid>
@@ -82,9 +156,9 @@
 </footer>
 
 <!-- 🔹 Legal -->
-<div class="footer-legales" style="text-align: center; margin: 1rem 0;">
-    <MudButton Variant="Variant.Text" OnClick="@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))">Términos</MudButton>
-    <MudButton Variant="Variant.Text" OnClick="@(() => AbrirModal("Privacidad", "https://cadamenudo.github.io/UI-UX/privacidad.html"))">Privacidad</MudButton>
+<div class="footer-legales greycliff" style="text-align: center; margin: 1rem 0;">
+    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))'>Términos</MudButton>
+    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Privacidad", "https://cadamenudo.github.io/UI-UX/privacidad.html"))'>Privacidad</MudButton>
     <a href="mailto:tech@cadamenudo.com" style="margin-left: 1rem;">tech@cadamenudo.com</a>
 </div>
 
