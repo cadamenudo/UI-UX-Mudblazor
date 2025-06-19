@@ -1,23 +1,19 @@
-@page "/"
-@inject IDialogService DialogService
-@using MudBlazor
-@using ChartJs.Blazor.BarChart
-@using ChartJs.Blazor.PieChart
-@using ChartJs.Blazor.Util
-
 <MudThemeProvider />
 <MudDialogProvider />
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="pa-4">
     <MudText Typo="Typo.h5" GutterBottom>Hola Xavier</MudText>
 
-    <!-- 🔹 Resumen de Ingresos / Gastos / Ahorro -->
+    <!-- 🔹 Botón para abrir términos -->
+<MudButton Variant="Variant.Filled" OnClick='@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))'></MudButton>
+
+    <!-- 🔹 Resumen -->
     <MudPaper Class="pa-4 my-2" Style="border-radius: 16px;">
         <MudGrid>
             @foreach (var item in Resumen)
             {
                 <MudItem xs="4">
-                    <MudStack Direction="Row" AlignItems="Center" Spacing="2">
+                    <MudStack Direction="Row" AlignItems="AlignItems.Center" Spacing="2">
                         <MudAvatar Image="@item.Icon" Size="Size.Medium" />
                         <MudStack>
                             <MudText Typo="Typo.caption">@item.Nombre</MudText>
@@ -34,131 +30,89 @@
         ✅ SUPER: Tienes un sobrante de <strong>$@Superavit</strong>
     </MudAlert>
 
-    <!-- 🔹 Selector de Fechas -->
+    <!-- 🔹 Fecha -->
     <MudGrid Class="my-3">
         <MudItem xs="6">
-            <MudDatePicker Label="Desde" @bind-Date="FechaDesde" />
+            <MudDatePicker Label="Desde" Date="@FechaDesde" DateChanged="@(v => FechaDesde = v)" />
         </MudItem>
         <MudItem xs="6">
-            <MudDatePicker Label="Hasta" @bind-Date="FechaHasta" />
+            <MudDatePicker Label="Hasta" Date="@FechaHasta" DateChanged="@(v => FechaHasta = v)" />
         </MudItem>
     </MudGrid>
 
-    <!-- 🔹 Gráficos en Blazor puro -->
+    <!-- 🔹 Gráficos -->
     <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Ingresos vs Gastos</MudText>
-        <BarChart Config="@BarConfig" Style="height: 300px;" />
+        <MudText Typo="Typo.h6" Align="Align.Center">Ingresos Totales</MudText>
+        <MudChart ChartType="ChartType.Pie" Labels="_labels" Data="_donutIngresos" />
     </MudPaper>
 
     <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Ingresos Totales</MudText>
-        <PieChart Config="@DonaIngresosConfig" Style="height: 300px;" />
+        <MudText Typo="Typo.h6" Align="Align.Center">Gastos Totales</MudText>
+        <MudChart ChartType="ChartType.Pie" Labels="_labels" Data="_donutGastos" />
+    </MudPaper>
+
+    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
+        <MudText Typo="Typo.h6" Align="Align.Center">Meta para el año</MudText>
+        <MudChart ChartType="ChartType.Bar" Labels="_labels" Data="_barData" />
     </MudPaper>
 </MudContainer>
 
-<footer class="navbar">
+<!-- 🔹 Footer -->
+<footer class="navbar" style="margin-top: 2rem; padding: 1rem; display: flex; justify-content: space-around; background: #f5f5f5;">
     <div class="nav-item">
-        <img src="assets/icons/home.png" alt="Inicio" />
-        <span>Tablero</span>
+        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/home.png" alt="Inicio" style="width: 32px;" />
+        <div>Tablero</div>
     </div>
     <div class="nav-item">
-        <img src="assets/icons/transacciones.png" alt="Transacciones" />
-        <span>Transacciones</span>
-    </div>
-    <div class="nav-item nav-item-nuevo">
-        <div class="boton-registrar">
-            <img src="assets/icons/nueva.png" alt="Registrar" />
-        </div>
-        <span>Registrar</span>
+        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones.png" alt="Transacciones" style="width: 32px;" />
+        <div>Transacciones</div>
     </div>
     <div class="nav-item">
-        <img src="assets/icons/metas.png" alt="Metas" />
-        <span>Metas</span>
+        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/nueva.png" alt="Nueva" style="width: 48px;" />
+        <div>Registrar</div>
     </div>
     <div class="nav-item">
-        <img src="assets/icons/buscar.png" alt="Buscar" />
-        <span>Buscar</span>
+        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/metas.png" alt="Metas" style="width: 32px;" />
+        <div>Metas</div>
+    </div>
+    <div class="nav-item">
+        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/buscar.png" alt="Buscar" style="width: 32px;" />
+        <div>Buscar</div>
     </div>
 </footer>
 
-<div class="footer-legales">
-    <button @onclick="() => AbrirModal("Términos", "terminos.html")">Términos</button>
-    <button @onclick="() => AbrirModal("Política de Privacidad", "privacidad.html")">Política de Privacidad</button>
-    <a href="mailto:tech@cadamenudo.com">tech@cadamenudo.com</a>
+<!-- 🔹 Legal -->
+<div class="footer-legales" style="text-align: center; margin: 1rem 0;">
+    <MudButton Variant="Variant.Text" OnClick="@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))">Términos</MudButton>
+    <MudButton Variant="Variant.Text" OnClick="@(() => AbrirModal("Privacidad", "https://cadamenudo.github.io/UI-UX/privacidad.html"))">Privacidad</MudButton>
+    <a href="mailto:tech@cadamenudo.com" style="margin-left: 1rem;">tech@cadamenudo.com</a>
 </div>
 
 @code {
-    private DateTime FechaDesde = new(2025, 1, 1);
-    private DateTime FechaHasta = new(2025, 5, 31);
+    private DateTime? FechaDesde = new DateTime(2025, 1, 1);
+    private DateTime? FechaHasta = new DateTime(2025, 5, 31);
     private string Superavit = "1,868.77";
 
     private List<(string Nombre, string Valor, string Icon)> Resumen = new()
     {
-        ("Ingresos", "$6,000.00", "assets/icons/ingreso.png"),
-        ("Gastos", "$3,531.23", "assets/icons/gastos.png"),
-        ("Ahorros", "$600.00", "assets/icons/ahorro.png")
+        ("Ingresos", "$6,000.00", "https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png"),
+        ("Gastos", "$3,531.23", "https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png"),
+        ("Ahorros", "$600.00", "https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png")
     };
 
-    private BarConfig BarConfig;
-    private PieConfig DonaIngresosConfig;
+    private string[] _labels = { "Enero", "Febrero", "Marzo" };
+    private double[] _donutIngresos = { 2500, 2000, 1500 };
+    private double[] _donutGastos = { 1200, 1400, 900 };
+    private double[] _barData = { 4000, 4500, 3800 };
 
-    protected override void OnInitialized()
-    {
-        BarConfig = new BarConfig
-        {
-            Options = new BarOptions
-            {
-                Responsive = true,
-                Title = new OptionsTitle { Display = false }
-            },
-            Data = new BarData
-            {
-                Labels = new[] { "Enero", "Febrero", "Marzo", "Abril" },
-                Datasets = new List<BarDataset<double>>
-                {
-                    new BarDataset<double>(new[] { 2000.0, 2200.0, 2500.0, 2100.0 })
-                    {
-                        Label = "Ingresos",
-                        BackgroundColor = new[] { ColorUtil.ColorHexString(Colors.Blue.Default) }
-                    },
-                    new BarDataset<double>(new[] { 1200.0, 1500.0, 1400.0, 1600.0 })
-                    {
-                        Label = "Gastos",
-                        BackgroundColor = new[] { ColorUtil.ColorHexString(Colors.Red.Default) }
-                    }
-                }
-            }
-        };
-
-        DonaIngresosConfig = new PieConfig
-        {
-            Options = new PieOptions
-            {
-                Responsive = true,
-                Title = new OptionsTitle { Display = false }
-            },
-            Data = new PieData
-            {
-                Labels = new[] { "Salario", "Freelance", "Otros" },
-                Datasets = new List<PieDataset<double>>
-                {
-                    new PieDataset<double>(new[] { 4000.0, 1500.0, 500.0 })
-                    {
-                        BackgroundColor = new[]
-                        {
-                            ColorUtil.ColorHexString(Colors.Green.Accent4),
-                            ColorUtil.ColorHexString(Colors.Yellow.Default),
-                            ColorUtil.ColorHexString(Colors.Grey.Darken1)
-                        }
-                    }
-                }
-            }
-        };
-    }
+    [Inject] IDialogService DialogService { get; set; }
 
     private async Task AbrirModal(string titulo, string url)
     {
-        var parameters = new DialogParameters { ["Url"] = url };
-        await DialogService.Show<ModalTérminos>(titulo, parameters).Result;
+        await DialogService.ShowMessageBox(
+            title: titulo,
+            markupMessage: (MarkupString)$"<iframe src='{url}' width='100%' height='300px' frameborder='0'></iframe>",
+            yesText: "Cerrar"
+        );
     }
 }
