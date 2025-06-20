@@ -1,0 +1,17 @@
+@* GraficoIngresosGastos.razor *@
+<div class="grafico-linea-container">
+    <canvas id="graficoLinea" width="600" height="300"></canvas>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("inicializarGraficoLinea");
+        }
+    }
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
+}
