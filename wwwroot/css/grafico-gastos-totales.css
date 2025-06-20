@@ -1,0 +1,36 @@
+
+.grafico-gastos-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2rem;
+}
+
+canvas {
+  max-width: 100%;
+  height: auto !important;
+  margin-bottom: 2rem;
+}
+
+.selector-subcategorias {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.selector-subcategorias label {
+  font-family: 'Greycliff CF', sans-serif;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.selector-subcategorias select {
+  font-family: 'Greycliff CF', sans-serif;
+  font-size: 14px;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  min-width: 200px;
+  text-align: center;
+}
