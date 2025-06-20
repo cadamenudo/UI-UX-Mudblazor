@@ -1,198 +1,221 @@
+
 <style>
   .greycliff {
-        font-family: 'Greycliff CF', sans-serif;
-    }
+    font-family: 'Greycliff CF', sans-serif;
+  }
+    body {
+    margin: 0;
+    background: #FAFBFF;
+    color: #000000;
+    padding-bottom: 80px;
+  }
 
-    .header-bar {
-        background-color: #594AE2;
-        padding: 1rem 2rem;
-        color: white;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
-    }
+  .header-bar {
+    background-color: #594AE2;
+    padding: 1rem 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .logo {
-        height: 30px;
-    }
+  .logo {
+    height: 30px;
+  }
 
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
 
-    .user-avatar {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-    }
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+  }
 
-.resumen-box {
+  .resumen-box {
     background-color: white;
     border-radius: 24px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     padding: 1.5rem;
-    margin-top: 0.5rem;     
+    margin-top: 0.5rem;
     margin-bottom: 1.25rem;
-}
+  }
 
+  .resumen-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 
-    .resumen-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
+  .resumen-icono {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border-radius: 50%;
+    padding: 6px;
+  }
 
-    .resumen-icono {
-        width: 40px;
-        height: 40px;
-        background: #f2f2f2;
-        border-radius: 50%;
-        padding: 6px;
-    }
+  .resumen-texto {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+  }
 
-    .resumen-texto {
-        display: flex;
-        flex-direction: column;
-        font-size: 14px;
-    }
-
-    .resumen-monto {
-        font-weight: 700;
-        font-size: 1.2rem;
-    }
+  .resumen-monto {
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
 </style>
 
 <MudThemeProvider />
 <MudDialogProvider />
 
-<!-- 🔹 Header personalizado -->
+<!-- 🔹 Header -->
 <div class="header-bar greycliff">
-    <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada-menudo-logo-white.png" alt="Logo" class="logo" />
-    <div class="user-info">
-        <span>Hola Xavier</span>
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" class="user-avatar" />
-    </div>
+  <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada-menudo-logo-white.png" alt="Logo" class="logo" />
+  <div class="user-info">
+    <span>Hola Xavier</span>
+    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" class="user-avatar" />
+  </div>
 </div>
 
-<!-- 🔹 Contenido general -->
+<!-- 🔹 Contenido -->
 <MudContainer MaxWidth="MaxWidth.Large" Class="pa-4 greycliff">
 
-    <!-- 🔹 Resumen estilizado -->
-    <MudPaper Class="resumen-box">
-        <MudGrid>
-            @foreach (var item in Resumen)
-            {
-                <MudItem Xs="4">
-                    <div class="resumen-item">
-                        <img src="@item.Icon" class="resumen-icono" />
-                        <div class="resumen-texto">
-                            <span>@item.Nombre</span>
-                            <span class="resumen-monto">@item.Valor</span>
-                        </div>
-                    </div>
-                </MudItem>
-            }
-        </MudGrid>
-    </MudPaper>
-
-    <!-- 🔹 Superávit -->
-    <MudAlert Severity="Severity.Success" Dense="true" Class="my-2">
-        ✅ SUPER: Tienes un sobrante de <strong>$@Superavit</strong>
-    </MudAlert>
-
-    <!-- 🔹 Fecha -->
-    <MudGrid Class="my-3">
-        <MudItem Xs="6">
-            <MudDatePicker Label="Desde" Date="@FechaDesde" DateChanged="@(v => FechaDesde = v)" />
+  <!-- 🔸 Resumen -->
+  <MudPaper Class="resumen-box">
+    <MudGrid>
+      @foreach (var item in Resumen)
+      {
+        <MudItem Xs="4">
+          <div class="resumen-item">
+            <img src="@item.Icon" class="resumen-icono" />
+            <div class="resumen-texto">
+              <span>@item.Nombre</span>
+              <span class="resumen-monto">@item.Valor</span>
+            </div>
+          </div>
         </MudItem>
-        <MudItem Xs="6">
-            <MudDatePicker Label="Hasta" Date="@FechaHasta" DateChanged="@(v => FechaHasta = v)" />
-        </MudItem>
+      }
     </MudGrid>
+  </MudPaper>
 
-    <!-- 🔹 Gráficos -->
-    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Ingresos Totales</MudText>
-        <MudChart ChartType="ChartType.Pie" Labels="_labels" Data="_donutIngresos" />
-    </MudPaper>
+  <!-- 🔹 Superávit -->
+<MudAlert Severity="Severity.Success" Dense="true" Class="my-2 mb-3">
+    SUPER: Tienes un sobrante de <strong>$@Superavit</strong>
+  </MudAlert>
+  
+  <!-- 🔸 Fechas -->
+<MudGrid Class="my-3 mb-5"> <!-- Aumentado a mb-5 -->
+    <MudItem Xs="6">
+        <MudDatePicker Label="Desde"
+                       @bind-Date="FechaDesde"
+                       DateFormat="dd/MM/yyyy"
+                       Culture="es-ES"
+                       AnchorOrigin="Origin.TopLeft"
+                       TransformOrigin="Origin.TopLeft" />
+    </MudItem>
+    <MudItem Xs="6">
+        <MudDatePicker Label="Hasta"
+                       @bind-Date="FechaHasta"
+                       DateFormat="dd/MM/yyyy"
+                       Culture="es-ES"
+                       AnchorOrigin="Origin.TopRight"
+                       TransformOrigin="Origin.TopRight" />
+    </MudItem>
 
-    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Gastos Totales</MudText>
-        <MudChart ChartType="ChartType.Pie" Labels="_labels" Data="_donutGastos" />
-    </MudPaper>
+</MudGrid>
 
-    <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-        <MudText Typo="Typo.h6" Align="Align.Center">Meta para el año</MudText>
-        <MudChart ChartType="ChartType.Bar" Labels="_labels" Data="_barData" />
-    </MudPaper>
+  <!-- 🔹 Gráfico 1: Meta del año -->
+  <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
+    <MudText Typo="Typo.h6" Align="Align.Center">Meta para el año</MudText>
+    <div style="text-align:center;">
+      <canvas id="graficoMeta" width="600" height="300"></canvas>
+    </div>
+  </MudPaper>
+
+  <!-- 🔹 Gráfico 2: Ingresos vs Gastos -->
+  <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
+    <MudText Typo="Typo.h6" Align="Align.Center">Ingresos vs Gastos</MudText>
+    <div style="text-align:center;">
+      <canvas id="graficoLinea" width="600" height="300"></canvas>
+    </div>
+  </MudPaper>
+
+  <!-- 🔹 Gráfico 3: Ingresos Totales -->
+  <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
+    <MudText Typo="Typo.h6" Align="Align.Center">Ingresos Totales</MudText>
+    <div style="text-align:center;">
+      <canvas id="graficoIngresosTotales" width="300" height="300"></canvas>
+    </div>
+  </MudPaper>
+
+  <!-- 🔹 Gráfico 4: Gastos Totales + Subcategorías -->
+  <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
+    <MudText Typo="Typo.h6" Align="Align.Center">Gastos Totales</MudText>
+    <div style="text-align:center;">
+      <canvas id="graficoGastosTotales" width="300" height="300"></canvas>
+    </div>
+
+    <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2">Ver subcategorías:</MudText>
+    <div style="text-align:center;">
+      <canvas id="graficoSubcategoria" width="300" height="300"></canvas>
+    </div>
+  </MudPaper>
+
 </MudContainer>
 
 <!-- 🔹 Legal -->
-
 <div class="footer-legales greycliff" style="text-align: center; margin: 1rem 0;">
-    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))'>Términos</MudButton>
-    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Privacidad", "https://cadamenudo.github.io/UI-UX/privacidad.html"))'>Privacidad</MudButton>
-    <a href="mailto:tech@cadamenudo.com" style="margin-left: 1rem;">tech@cadamenudo.com</a>
+    <a href="https://cadamenudo.github.io/UI-UX/terminos.html" target="_blank" style="margin-right: 1rem;">TÉRMINOS</a>
+    <a href="https://cadamenudo.github.io/UI-UX/privacidad.html" target="_blank" style="margin-right: 1rem;">PRIVACIDAD</a>
+    <a href="mailto:tech@cadamenudo.com" style="font-weight: 500;">tech@cadamenudo.com</a>
 </div>
 
 <!-- 🔹 Footer -->
-
-<footer class="navbar greycliff" style="background-color: #594AE2; padding: 1rem 0; display: flex; justify-content: center;">
-    <div style="display: flex; gap: 2.5rem; align-items: center;">
-        <div style="text-align: center; color: white;">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/home.png" style="width: 28px;" />
-            <div>Tablero</div>
-        </div>
-        <div style="text-align: center; color: white;">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones.png" style="width: 28px;" />
-            <div>Transacciones</div>
-        </div>
-        <div style="text-align: center;">
-            <div style="background: white; border-radius: 20px; padding: 0.5rem;">
-                <img src="https://cadamenudo.github.io/UI-UX/assets/icons/nueva.png" style="width: 32px;" />
-            </div>
-            <div style="color: white; font-weight: 600;">Registrar</div>
-        </div>
-        <div style="text-align: center; color: white;">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/metas.png" style="width: 28px;" />
-            <div>Metas</div>
-        </div>
-        <div style="text-align: center; color: white;">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/buscar.png" style="width: 28px;" />
-            <div>Buscar</div>
-        </div>
+<footer class="navbar greycliff" style="background-color: #594AE2; padding: 1rem 0;">
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; align-items: center;">
+    
+    <div style="color: white;">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/home.png" style="width: 28px;" />
+      <div>Tablero</div>
     </div>
+
+    <div style="color: white;">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones.png" style="width: 28px;" />
+      <div>Transacciones</div>
+    </div>
+
+    <div style="color: white;">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/nueva.png" style="width: 32px;" />
+      <div style="font-weight: 600; margin-top: 4px;">Registrar</div>
+    </div>
+
+    <div style="color: white;">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/metas.png" style="width: 28px;" />
+      <div>Metas</div>
+    </div>
+
+    <div style="color: white;">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/buscar.png" style="width: 28px;" />
+      <div>Buscar</div>
+    </div>
+    
+  </div>
 </footer>
 
 @code {
-    private DateTime? FechaDesde = new DateTime(2025, 1, 1);
-    private DateTime? FechaHasta = new DateTime(2025, 5, 31);
-    private string Superavit = "1,868.77";
+  private DateTime? FechaDesde = new DateTime(2025, 1, 1);
+  private DateTime? FechaHasta = new DateTime(2025, 5, 31);
+  private string Superavit = "1,868.77";
 
-    private List<(string Nombre, string Valor, string Icon)> Resumen = new()
-    {
-        ("Ingresos", "$6,000.00", "https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png"),
-        ("Gastos", "$3,531.23", "https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png"),
-        ("Ahorros", "$600.00", "https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png")
-    };
-
-    private string[] _labels = { "Enero", "Febrero", "Marzo" };
-    private double[] _donutIngresos = { 2500, 2000, 1500 };
-    private double[] _donutGastos = { 1200, 1400, 900 };
-    private double[] _barData = { 4000, 4500, 3800 };
-
-    [Inject] IDialogService DialogService { get; set; }
-
-    private async Task AbrirModal(string titulo, string url)
-    {
-        await DialogService.ShowMessageBox(
-            title: titulo,
-            markupMessage: (MarkupString)$"<iframe src='{url}' width='100%' height='300px' frameborder='0'></iframe>",
-            yesText: "Cerrar"
-        );
-    }
+  private List<(string Nombre, string Valor, string Icon)> Resumen = new()
+  {
+    ("Ingresos", "$6,000.00", "https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png"),
+    ("Gastos", "$3,531.23", "https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png"),
+    ("Ahorros", "$600.00", "https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png")
+  };
 }
