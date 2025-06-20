@@ -1,28 +1,82 @@
 <style>
-    
-    .titulo-exp {
+
+      body {
     font-family: 'Greycliff CF', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #0f172a;
-}
+    background: #F9FAFB;
+  }
+    .titulo-exp {
+        font-family: 'Greycliff CF', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
 
-.categoria-panel {
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-    margin: 0 auto 1.5rem;
-    max-width: 700px;
-}
+    .categoria-panel {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+        margin: 0 auto 1.5rem;
+        max-width: 700px;
+    }
 
-.encabezado-categoria {
+    .categoria-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.05rem;
+        padding: 1rem 1rem 0.5rem;
+        cursor: pointer;
+    }
+
+.subcategoria-item {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 0.75rem;
+    justify-content: space-between;
+    padding: 0.25rem 1rem 0.25rem 2rem;
+    margin-bottom: 0.5rem;
 }
 
+
+    .subcategoria-item .nombre {
+        flex-grow: 1;
+        font-size: 1rem;
+        color: #0f172a;
+    }
+
+    .subcategoria-item .recurrencia {
+        margin-left: 0.25rem;
+    }
+
+    .subcategoria-item .switch {
+        margin-left: auto;
+    }
+
+    .btn-nueva {
+        margin: 0.5rem 1.5rem 1rem auto;
+        border-radius: 12px;
+        min-width: 90px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background-color: #594AE2;
+        color: white;
+        text-transform: uppercase;
+        padding: 0.3rem 1rem;
+    }
+
+    .wrapper-boton-nueva {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 0 0.5rem 1rem 2rem;
+    }
+
+    @@media (max-width: 600px) {
+        .subcategoria-item {
+            padding-left: 2rem;
+        }
+    }
 </style>
+
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
     <MudText Typo="Typo.h5" Class="mb-4">Lista de Categorías</MudText>
@@ -36,45 +90,36 @@
                                Text="@grupo.Nombre">
                 @foreach (var categoria in grupo.Items)
                 {
-                    <MudPaper Class="pa-3 mb-2">
-                        <div class="d-flex justify-space-between align-center">
-                            <MudText Typo="Typo.subtitle1">@categoria.Nombre</MudText>
+                    <MudPaper Class="pa-0 mb-2">
+
+                        <div class="categoria-header" @onclick="@(() => ToggleCategoria(categoria, grupo))">
+                            @categoria.Nombre
                             <MudSwitch T="bool" @bind-Checked="categoria.Activo" />
                         </div>
 
-                        <MudDivider Class="my-2" />
+                        @if (categoria.Expandida)
+                        {
+                            <MudDivider Class="mx-4 mb-2" />
 
-                        <MudList T="object" Dense="true">
                             @foreach (var sub in categoria.Subcategorias)
                             {
-                                <MudListItem T="object">
-                                    @if (sub.Editando)
-                                    {
-                                        <MudTextField @bind-Value="sub.Nombre" Immediate="true" Class="mr-2" />
-                                        <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" OnClick="@(() => sub.Editando = false)">✅</MudButton>
-                                    }
-                                    else
-                                    {
-                                        <MudText Class="cursor-pointer" OnClick="@(() => sub.Editando = true)">
-                                            @sub.Nombre
-                                            @if (!string.IsNullOrWhiteSpace(sub.Recurrencia))
-                                            {
-                                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Class="ml-2">↻ @sub.Recurrencia</MudChip>
-                                            }
-                                        </MudText>
-                                    }
-
-                                    <MudSwitch T="bool" Class="ml-auto mr-2" @bind-Checked="sub.Activo" Color="Color.Secondary" />
-                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => categoria.Subcategorias.Remove(sub))" />
-                                </MudListItem>
+                                <div class="subcategoria-item">
+                                    <span>@sub.Nombre</span>
+                                    <MudSwitch T="bool" @bind-Checked="sub.Activo" Color="Color.Secondary" />
+                                </div>
                             }
-                        </MudList>
 
-                        <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => AbrirModal(categoria))">
-                            Subcategoría
-                        </MudButton>
+                            <div class="wrapper-boton-nueva">
+                                <MudButton Class="btn-nueva" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
+                                        OnClick="@(() => AbrirModal(categoria))">
+                                    NUEVA
+                                </MudButton>
+                            </div>
+                        }
                     </MudPaper>
                 }
+
+
             </MudExpansionPanel>
         }
     </MudExpansionPanels>
@@ -134,6 +179,7 @@
     {
         public string Nombre { get; set; }
         public bool Activo { get; set; } = true;
+        public bool Expandida { get; set; } = false; // ✅ NECESARIO para resolver CS1061
         public List<Subcategoria> Subcategorias { get; set; } = new();
     }
 
@@ -150,8 +196,13 @@
             Nombre = "Ingresos",
             Items = new()
             {
-                new Categoria { Nombre = "Pago por trabajo", Subcategorias = new() { new Subcategoria { Nombre = "Salario", Recurrencia = "mensual", MontoDecimal = 1500 }, new Subcategoria { Nombre = "Bono" } } },
-                new Categoria { Nombre = "Ganancia de capital", Subcategorias = new() { new Subcategoria { Nombre = "Acciones" } } }
+                new Categoria { Nombre = "Pago por trabajo", Subcategorias = new() {
+                    new Subcategoria { Nombre = "Salario", Recurrencia = "mensual", MontoDecimal = 1500 },
+                    new Subcategoria { Nombre = "Bono" }
+                }},
+                new Categoria { Nombre = "Ganancia de capital", Subcategorias = new() {
+                    new Subcategoria { Nombre = "Acciones" }
+                }}
             }
         },
         new GrupoCategoria
@@ -159,8 +210,12 @@
             Nombre = "Gastos",
             Items = new()
             {
-                new Categoria { Nombre = "Alimentación", Subcategorias = new() { new Subcategoria { Nombre = "Supermercado" } } },
-                new Categoria { Nombre = "Casa", Subcategorias = new() { new Subcategoria { Nombre = "Alquiler" } } }
+                new Categoria { Nombre = "Alimentación", Subcategorias = new() {
+                    new Subcategoria { Nombre = "Supermercado" }
+                }},
+                new Categoria { Nombre = "Casa", Subcategorias = new() {
+                    new Subcategoria { Nombre = "Alquiler" }
+                }}
             }
         },
         new GrupoCategoria
@@ -168,8 +223,12 @@
             Nombre = "Ahorro",
             Items = new()
             {
-                new Categoria { Nombre = "Emergencia", Subcategorias = new() { new Subcategoria { Nombre = "Corto plazo" } } },
-                new Categoria { Nombre = "Retiro", Subcategorias = new() { new Subcategoria { Nombre = "401(k)" } } }
+                new Categoria { Nombre = "Emergencia", Subcategorias = new() {
+                    new Subcategoria { Nombre = "Corto plazo" }
+                }},
+                new Categoria { Nombre = "Retiro", Subcategorias = new() {
+                    new Subcategoria { Nombre = "401(k)" }
+                }}
             }
         }
     };
@@ -191,6 +250,15 @@
         _modalAbierto = false;
     }
 
+    void ToggleCategoria(Categoria categoria, GrupoCategoria grupo)
+    {
+        foreach (var c in grupo.Items)
+            c.Expandida = false;
+
+        categoria.Expandida = true;
+    }
+
+
     async void GuardarSubcategoria()
     {
         await _formRef.Validate();
@@ -210,3 +278,5 @@
         _modalAbierto = false;
     }
 }
+
+
