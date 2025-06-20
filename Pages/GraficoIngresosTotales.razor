@@ -1,0 +1,17 @@
+
+@page "/grafico-ingresos"
+@inject IJSRuntime JSRuntime
+
+<div style="text-align:center;">
+  <canvas id="graficoDonaIngresos" width="280" height="280"></canvas>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("eval", "import('/js/grafico-ingresos-totales.js')");
+        }
+    }
+}
