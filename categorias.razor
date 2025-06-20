@@ -20,6 +20,9 @@
     font-size: 1.1rem;
     color: #0f172a;
 }
+.mud-switch-checked.mud-switch-primary {
+  --mud-palette-primary: #594AE2;
+}
 
     .titulo-exp {
         font-family: 'Greycliff CF', sans-serif;
@@ -57,6 +60,23 @@
         padding: 1rem 1rem 0.5rem;
         cursor: pointer;
     }
+.categoria-header.activa {
+  background-color: #EEF0FF;
+  color: #000;
+}
+
+.categoria-header.inactiva {
+  background-color: #F5F5F5;
+  color: #999;
+}
+
+.subcategoria-item.activa {
+  opacity: 1;
+}
+
+.subcategoria-item.inactiva {
+  opacity: 0.5;
+}
 
 .subcategoria-item {
     display: flex;
@@ -107,13 +127,15 @@
         padding-right: 0 0.5rem 1rem 2rem;
     }
 
+.mud-button span {
+    font-size: 0.85rem;
+}
     @@media (max-width: 600px) {
         .subcategoria-item {
             padding-left: 2rem;
         }
     }
 </style>
-
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
     <MudText Typo="Typo.h5" Class="mb-4">Lista de Categorías</MudText>
@@ -131,7 +153,7 @@
 
                         <div class="categoria-header" @onclick="@(() => ToggleCategoria(categoria, grupo))">
                             @categoria.Nombre
-                            <MudSwitch T="bool" @bind-Checked="categoria.Activo" />
+                            <MudSwitch T="bool" @bind-Checked="categoria.Activo" Color="Color.Primary" />
                         </div>
 
                         @if (categoria.Expandida)
@@ -142,13 +164,15 @@
                             {
                                 <div class="subcategoria-item">
                                     <span>@sub.Nombre</span>
-                                    <MudSwitch T="bool" @bind-Checked="sub.Activo" Color="Color.Secondary" />
+                                    <MudSwitch T="bool" @bind-Checked="sub.Activo" Color="Color.Primary" />
                                 </div>
                             }
 
                             <div class="wrapper-boton-nueva">
-                                <MudButton Class="btn-nueva" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
-                                        OnClick="@(() => AbrirModal(categoria))">
+                                <MudButton Class="btn-nueva"
+                                           Variant="Variant.Filled"
+                                           StartIcon="@Icons.Material.Filled.Add"
+                                           OnClick="@(() => AbrirModal(categoria))">
                                     nueva
                                 </MudButton>
                             </div>
@@ -156,11 +180,39 @@
                     </MudPaper>
                 }
 
-
+                @if (grupo.Nombre != "Ingresos")
+                {
+                    if (mostrandoInputNuevaCategoria && grupoEditando == grupo)
+                    {
+                        <div class="d-flex gap-2 mt-2 ms-4">
+                            <MudTextField T="string"
+                                          @bind-Value="nuevoNombreCategoria"
+                                          Placeholder="Nueva categoría"
+                                          Immediate="true"
+                                          Style="max-width: 250px;" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Check"
+                                           Color="Color.Primary"
+                                           OnClick="AgregarCategoria" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Close"
+                                           Color="Color.Default"
+                                           OnClick="CancelarNuevaCategoria" />
+                        </div>
+                    }
+                    else
+                    {
+                    <div class="d-flex justify-end mt-2 me-4">
+                        <MudButton StartIcon="@Icons.Material.Filled.Add"
+                                Variant="Variant.Filled"
+                                Style="background-color:#594AE2; color:white; text-transform: none; border-radius: 12px; padding: 0.4rem 1rem;"
+                                OnClick="@(() => MostrarInputNuevaCategoria(grupo))">
+                            categoria
+                        </MudButton>
+                    </div>
+                    }
+                }
             </MudExpansionPanel>
         }
     </MudExpansionPanels>
-
 </MudContainer>
 
 <MudDialog @bind-IsVisible="_modalAbierto">
@@ -181,13 +233,13 @@
 
             @if (!string.IsNullOrEmpty(_form.Recurrencia) && _form.Recurrencia != "ninguna")
             {
-            <MudTextField Label="Monto"
-                        @bind-Value="_form.MontoDecimal"
-                        Required="true"
-                        RequiredError="El monto es obligatorio si hay recurrencia"
-                        Immediate="true"
-                        Adornment="Adornment.Start"
-                        AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+                <MudTextField Label="Monto"
+                              @bind-Value="_form.MontoDecimal"
+                              Required="true"
+                              RequiredError="El monto es obligatorio si hay recurrencia"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
             }
 
             <MudTextField Label="Descripción" @bind-Value="_form.Descripcion" />
@@ -199,6 +251,7 @@
         </div>
     </MudForm>
 </MudDialog>
+
 
 @code {
 
@@ -404,6 +457,45 @@
         categoria.Expandida = !categoria.Expandida;
     }
 
+// Variables nuevas para creación de categoría
+string nuevoNombreCategoria = "";
+GrupoCategoria grupoEditando = null;
+bool mostrandoInputNuevaCategoria = false;
+
+// Mostrar input al presionar '+ nueva'
+void MostrarInputNuevaCategoria(GrupoCategoria grupo)
+{
+    grupoEditando = grupo;
+    mostrandoInputNuevaCategoria = true;
+    nuevoNombreCategoria = "";
+}
+
+// Cancelar la acción de crear categoría
+void CancelarNuevaCategoria()
+{
+    mostrandoInputNuevaCategoria = false;
+    grupoEditando = null;
+    nuevoNombreCategoria = "";
+}
+
+// Guardar nueva categoría
+void AgregarCategoria()
+{
+    if (!string.IsNullOrWhiteSpace(nuevoNombreCategoria) && grupoEditando != null)
+    {
+        grupoEditando.Items.Add(new Categoria
+        {
+            Nombre = nuevoNombreCategoria,
+            Subcategorias = new List<Subcategoria>(),
+            Expandida = false
+        });
+    }
+
+    mostrandoInputNuevaCategoria = false;
+    grupoEditando = null;
+    nuevoNombreCategoria = "";
+}
+
     async void GuardarSubcategoria()
     {
         await _formRef.Validate();
@@ -422,5 +514,7 @@
 
         _modalAbierto = false;
     }
+    
 }
+
 
