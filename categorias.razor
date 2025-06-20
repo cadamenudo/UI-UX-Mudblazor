@@ -1,0 +1,212 @@
+<style>
+    
+    .titulo-exp {
+    font-family: 'Greycliff CF', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.categoria-panel {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    margin: 0 auto 1.5rem;
+    max-width: 700px;
+}
+
+.encabezado-categoria {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+}
+
+</style>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
+    <MudText Typo="Typo.h5" Class="mb-4">Lista de Categorías</MudText>
+
+    <MudExpansionPanels Elevation="0" Rounded="false" Class="pa-0">
+        @foreach (var grupo in Categorias)
+        {
+            <MudExpansionPanel Class="categoria-panel"
+                               Elevation="0"
+                               Rounded="true"
+                               Text="@grupo.Nombre">
+                @foreach (var categoria in grupo.Items)
+                {
+                    <MudPaper Class="pa-3 mb-2">
+                        <div class="d-flex justify-space-between align-center">
+                            <MudText Typo="Typo.subtitle1">@categoria.Nombre</MudText>
+                            <MudSwitch T="bool" @bind-Checked="categoria.Activo" />
+                        </div>
+
+                        <MudDivider Class="my-2" />
+
+                        <MudList T="object" Dense="true">
+                            @foreach (var sub in categoria.Subcategorias)
+                            {
+                                <MudListItem T="object">
+                                    @if (sub.Editando)
+                                    {
+                                        <MudTextField @bind-Value="sub.Nombre" Immediate="true" Class="mr-2" />
+                                        <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" OnClick="@(() => sub.Editando = false)">✅</MudButton>
+                                    }
+                                    else
+                                    {
+                                        <MudText Class="cursor-pointer" OnClick="@(() => sub.Editando = true)">
+                                            @sub.Nombre
+                                            @if (!string.IsNullOrWhiteSpace(sub.Recurrencia))
+                                            {
+                                                <MudChip T="string" Color="Color.Success" Size="Size.Small" Class="ml-2">↻ @sub.Recurrencia</MudChip>
+                                            }
+                                        </MudText>
+                                    }
+
+                                    <MudSwitch T="bool" Class="ml-auto mr-2" @bind-Checked="sub.Activo" Color="Color.Secondary" />
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => categoria.Subcategorias.Remove(sub))" />
+                                </MudListItem>
+                            }
+                        </MudList>
+
+                        <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => AbrirModal(categoria))">
+                            Subcategoría
+                        </MudButton>
+                    </MudPaper>
+                }
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
+
+</MudContainer>
+
+<MudDialog @bind-IsVisible="_modalAbierto">
+    <MudForm @ref="_formRef">
+        <div class="pa-4">
+            <MudText Typo="Typo.h6">Nueva Subcategoría</MudText>
+
+            <MudTextField Label="Nombre" @bind-Value="_form.Nombre" Required="true" RequiredError="El nombre es obligatorio" />
+
+            <MudSelect T="string" Label="Recurrencia" @bind-Value="_form.Recurrencia">
+                <MudSelectItem T="string" Value="@("ninguna")">Ninguna</MudSelectItem>
+                <MudSelectItem T="string" Value="@("diario")">Diario</MudSelectItem>
+                <MudSelectItem T="string" Value="@("semanal")">Semanal</MudSelectItem>
+                <MudSelectItem T="string" Value="@("quincenal")">Quincenal</MudSelectItem>
+                <MudSelectItem T="string" Value="@("mensual")">Mensual</MudSelectItem>
+                <MudSelectItem T="string" Value="@("anual")">Anual</MudSelectItem>
+            </MudSelect>
+
+            @if (!string.IsNullOrEmpty(_form.Recurrencia) && _form.Recurrencia != "ninguna")
+            {
+            <MudTextField Label="Monto"
+                        @bind-Value="_form.MontoDecimal"
+                        Required="true"
+                        RequiredError="El monto es obligatorio si hay recurrencia"
+                        Immediate="true"
+                        Adornment="Adornment.Start"
+                        AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+            }
+
+            <MudTextField Label="Descripción" @bind-Value="_form.Descripcion" />
+        </div>
+
+        <div class="d-flex justify-end pa-4 gap-2">
+            <MudButton OnClick="CancelarModal" Color="Color.Secondary" Variant="Variant.Text">Cancelar</MudButton>
+            <MudButton OnClick="GuardarSubcategoria" Color="Color.Primary" Variant="Variant.Filled">Guardar</MudButton>
+        </div>
+    </MudForm>
+</MudDialog>
+
+@code {
+
+    class Subcategoria
+    {
+        public string Nombre { get; set; }
+        public string Recurrencia { get; set; }
+        public decimal? MontoDecimal { get; set; }
+        public string Descripcion { get; set; }
+        public bool Activo { get; set; } = true;
+        public bool Editando { get; set; } = false;
+    }
+
+    class Categoria
+    {
+        public string Nombre { get; set; }
+        public bool Activo { get; set; } = true;
+        public List<Subcategoria> Subcategorias { get; set; } = new();
+    }
+
+    class GrupoCategoria
+    {
+        public string Nombre { get; set; }
+        public List<Categoria> Items { get; set; } = new();
+    }
+
+    List<GrupoCategoria> Categorias = new()
+    {
+        new GrupoCategoria
+        {
+            Nombre = "Ingresos",
+            Items = new()
+            {
+                new Categoria { Nombre = "Pago por trabajo", Subcategorias = new() { new Subcategoria { Nombre = "Salario", Recurrencia = "mensual", MontoDecimal = 1500 }, new Subcategoria { Nombre = "Bono" } } },
+                new Categoria { Nombre = "Ganancia de capital", Subcategorias = new() { new Subcategoria { Nombre = "Acciones" } } }
+            }
+        },
+        new GrupoCategoria
+        {
+            Nombre = "Gastos",
+            Items = new()
+            {
+                new Categoria { Nombre = "Alimentación", Subcategorias = new() { new Subcategoria { Nombre = "Supermercado" } } },
+                new Categoria { Nombre = "Casa", Subcategorias = new() { new Subcategoria { Nombre = "Alquiler" } } }
+            }
+        },
+        new GrupoCategoria
+        {
+            Nombre = "Ahorro",
+            Items = new()
+            {
+                new Categoria { Nombre = "Emergencia", Subcategorias = new() { new Subcategoria { Nombre = "Corto plazo" } } },
+                new Categoria { Nombre = "Retiro", Subcategorias = new() { new Subcategoria { Nombre = "401(k)" } } }
+            }
+        }
+    };
+
+    bool _modalAbierto = false;
+    Categoria _categoriaSeleccionada;
+    Subcategoria _form = new();
+    MudForm _formRef;
+
+    void AbrirModal(Categoria categoria)
+    {
+        _categoriaSeleccionada = categoria;
+        _form = new Subcategoria();
+        _modalAbierto = true;
+    }
+
+    void CancelarModal()
+    {
+        _modalAbierto = false;
+    }
+
+    async void GuardarSubcategoria()
+    {
+        await _formRef.Validate();
+
+        if (!_formRef.IsValid || (!string.IsNullOrEmpty(_form.Recurrencia) && !_form.MontoDecimal.HasValue))
+            return;
+
+        _categoriaSeleccionada.Subcategorias.Add(new Subcategoria
+        {
+            Nombre = _form.Nombre,
+            Recurrencia = _form.Recurrencia,
+            MontoDecimal = _form.MontoDecimal,
+            Descripcion = _form.Descripcion,
+            Activo = true
+        });
+
+        _modalAbierto = false;
+    }
+}
