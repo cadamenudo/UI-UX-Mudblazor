@@ -141,26 +141,17 @@
   <GraficoIngresosGastos />
 </MudPaper>
 
-  <!-- 🔹 Gráfico 3: Ingresos Totales -->
+<!-- 🔹 Gráfico 3: Ingresos Totales -->
   <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
     <MudText Typo="Typo.h6" Align="Align.Center">Ingresos Totales</MudText>
-    <div style="text-align:center;">
-      <canvas id="graficoIngresosTotales" width="300" height="300"></canvas>
-    </div>
+ <GraficoIngresosTotales />
   </MudPaper>
 
-  <!-- 🔹 Gráfico 4: Gastos Totales + Subcategorías -->
-  <MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
-    <MudText Typo="Typo.h6" Align="Align.Center">Gastos Totales</MudText>
-    <div style="text-align:center;">
-      <canvas id="graficoGastosTotales" width="300" height="300"></canvas>
-    </div>
-
-    <MudText Typo="Typo.subtitle1" Class="mt-4 mb-2">Ver subcategorías:</MudText>
-    <div style="text-align:center;">
-      <canvas id="graficoSubcategoria" width="300" height="300"></canvas>
-    </div>
-  </MudPaper>
+<!-- 🔹 Gráfico 4: Gastos Totales + Subcategorías -->
+<MudPaper Class="pa-4 my-4" Style="border-radius:16px;">
+  <MudText Typo="Typo.h6" Align="Align.Center">Gastos Totales</MudText>
+  <GraficoGastosTotales />
+</MudPaper>
 
 </MudContainer>
 
