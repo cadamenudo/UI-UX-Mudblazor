@@ -1,0 +1,11 @@
+/* wwwroot/css/grafico-ingresos-gastos.css */
+.grafico-linea-container {
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 700px;
+}
+
+canvas#graficoLinea {
+  max-width: 100%;
+  height: auto;
+}
