@@ -1,0 +1,35 @@
+
+@* Componente Razor *@
+<div class="grafico-gastos-container">
+  <canvas id="graficoDonaGastos" width="280" height="280"></canvas>
+
+  <div class="selector-subcategorias">
+    <label for="selectorCategoria">Ver subcategorías:</label>
+    <select id="selectorCategoria">
+      <option value="alimentacion" selected>Alimentación</option>
+      <option value="casa">Casa</option>
+      <option value="cuidado">Cuidado Personal</option>
+      <option value="dependientes">Dependientes</option>
+      <option value="deuda">Deuda</option>
+      <option value="entretenimiento">Entretenimiento</option>
+      <option value="medicos">Gastos Médicos</option>
+      <option value="impuestos">Impuestos</option>
+      <option value="donaciones">Regalos y Donaciones</option>
+      <option value="seguros">Seguros</option>
+      <option value="telecom">Telecomunicaciones</option>
+      <option value="transporte">Transportación</option>
+    </select>
+  </div>
+
+  <canvas id="graficoSubcategoria" width="280" height="280" style="margin-top: 30px;"></canvas>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("inicializarGraficoGastosTotales");
+        }
+    }
+}
