@@ -131,6 +131,14 @@
     </MudPaper>
 </MudContainer>
 
+<!-- 🔹 Legal -->
+
+<div class="footer-legales greycliff" style="text-align: center; margin: 1rem 0;">
+    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))'>Términos</MudButton>
+    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Privacidad", "https://cadamenudo.github.io/UI-UX/privacidad.html"))'>Privacidad</MudButton>
+    <a href="mailto:tech@cadamenudo.com" style="margin-left: 1rem;">tech@cadamenudo.com</a>
+</div>
+
 <!-- 🔹 Footer -->
 
 <footer class="navbar greycliff" style="background-color: #594AE2; padding: 1rem 0; display: flex; justify-content: center;">
@@ -159,14 +167,6 @@
         </div>
     </div>
 </footer>
-
-
-<!-- 🔹 Legal -->
-<div class="footer-legales greycliff" style="text-align: center; margin: 1rem 0;">
-    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Términos", "https://cadamenudo.github.io/UI-UX/terminos.html"))'>Términos</MudButton>
-    <MudButton Variant="Variant.Text" OnClick='@(() => AbrirModal("Privacidad", "https://cadamenudo.github.io/UI-UX/privacidad.html"))'>Privacidad</MudButton>
-    <a href="mailto:tech@cadamenudo.com" style="margin-left: 1rem;">tech@cadamenudo.com</a>
-</div>
 
 @code {
     private DateTime? FechaDesde = new DateTime(2025, 1, 1);
