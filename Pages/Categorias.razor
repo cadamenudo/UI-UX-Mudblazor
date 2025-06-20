@@ -1,0 +1,71 @@
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
+    <MudText Typo="Typo.h5" Class="mb-4">Lista de Categorías</MudText>
+    <MudExpansionPanels Elevation="0" Rounded="false" Class="pa-0">
+        @foreach (var grupo in Categorias)
+        {
+            <MudExpansionPanel Class="categoria-panel" Elevation="0" Rounded="true" Text="@grupo.Nombre">
+                @foreach (var categoria in grupo.Items)
+                {
+                    <MudPaper Class="categoria-bloque">
+                        <div class="categoria-header" @onclick="@(() => ToggleCategoria(categoria, grupo))">
+                            @categoria.Nombre
+                            <MudSwitch T="bool" @bind-Checked="categoria.Activo" Color="Color.Primary" />
+                        </div>
+                        @if (categoria.Expandida)
+                        {
+                            <MudDivider Class="mx-4 mb-2" />
+                            @foreach (var sub in categoria.Subcategorias)
+                            {
+                                <div class="subcategoria-item">
+                                    <span>@sub.Nombre</span>
+                                    <MudSwitch T="bool" @bind-Checked="categoria.Activo" Color="Color.Primary" />
+                                </div>
+                            }
+                            @if (grupo.Nombre != "Ingresos")
+                            {
+                                <div class="wrapper-boton-nueva">
+                                    <MudButton Class="btn-nueva" Variant="Variant.Filled" Color="Color.Primary"
+                                               StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => AbrirModal(categoria))">
+                                        nueva
+                                    </MudButton>
+                                </div>
+                            }
+                        }
+                    </MudPaper>
+                }
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
+</MudContainer>
+
+<MudDialog @bind-IsVisible="_modalAbierto">
+    <MudForm @ref="_formRef">
+        <div class="pa-4">
+            <MudText Typo="Typo.h6">Nueva Subcategoría</MudText>
+            <MudTextField Label="Nombre" @bind-Value="_form.Nombre" Required="true" RequiredError="El nombre es obligatorio" />
+            <MudSelect T="string" Label="Recurrencia" @bind-Value="_form.Recurrencia">
+                <MudSelectItem Value="ninguna">Ninguna</MudSelectItem>
+                <MudSelectItem Value="diario">Diario</MudSelectItem>
+                <MudSelectItem Value="semanal">Semanal</MudSelectItem>
+                <MudSelectItem Value="quincenal">Quincenal</MudSelectItem>
+                <MudSelectItem Value="mensual">Mensual</MudSelectItem>
+                <MudSelectItem Value="anual">Anual</MudSelectItem>
+            </MudSelect>
+            @if (!string.IsNullOrEmpty(_form.Recurrencia) && _form.Recurrencia != "ninguna")
+            {
+                <MudTextField Label="Monto" @bind-Value="_form.MontoDecimal" Required="true" Immediate="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+            }
+            <MudTextField Label="Descripción" @bind-Value="_form.Descripcion" />
+        </div>
+        <div class="d-flex justify-end pa-4 gap-2">
+            <MudButton OnClick="CancelarModal" Color="Color.Secondary" Variant="Variant.Text">Cancelar</MudButton>
+            <MudButton OnClick="GuardarSubcategoria" Color="Color.Primary" Variant="Variant.Filled">Guardar</MudButton>
+        </div>
+    </MudForm>
+</MudDialog>
+
+@code {
+    // Código C# completo aquí
+}
