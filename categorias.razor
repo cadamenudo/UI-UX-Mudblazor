@@ -43,10 +43,10 @@
 
 .categoria-bloque {
     background-color: #ffffff;
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 1rem;
     margin-bottom: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
     .categoria-header {
         display: flex;
@@ -80,17 +80,26 @@
         margin-left: auto;
     }
 
-    .btn-nueva {
-        margin: 0.5rem 1.5rem 1rem auto;
-        border-radius: 12px;
-        min-width: 90px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        background-color: #594AE2;
-        color: white;
-        text-transform: uppercase;
-        padding: 0.3rem 1rem;
-    }
+.btn-nueva {
+    margin: 0.5rem 1.5rem 1rem auto;
+    border-radius: 12px;
+    min-width: 90px;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #594AE2;
+    color: white;
+    padding: 0.3rem 1rem;
+    text-transform: none;  
+    box-shadow: none;
+    transition: none;
+}
+
+.btn-nueva:hover {
+    background-color: #594AE2;
+    color: white;
+    box-shadow: none;
+    filter: none;
+}
 
     .wrapper-boton-nueva {
         display: flex;
@@ -118,7 +127,7 @@
                                Text="@grupo.Nombre">
                 @foreach (var categoria in grupo.Items)
                 {
-                    <MudPaper Class="pa-0 mb-2">
+                    <MudPaper Class="categoria-bloque">
 
                         <div class="categoria-header" @onclick="@(() => ToggleCategoria(categoria, grupo))">
                             @categoria.Nombre
@@ -140,7 +149,7 @@
                             <div class="wrapper-boton-nueva">
                                 <MudButton Class="btn-nueva" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
                                         OnClick="@(() => AbrirModal(categoria))">
-                                    NUEVA
+                                    nueva
                                 </MudButton>
                             </div>
                         }
@@ -233,32 +242,122 @@
                 }}
             }
         },
-        new GrupoCategoria
-        {
-            Nombre = "Gastos",
-            Items = new()
-            {
-                new Categoria { Nombre = "Alimentación", Subcategorias = new() {
-                    new Subcategoria { Nombre = "Supermercado" }
-                }},
-                new Categoria { Nombre = "Casa", Subcategorias = new() {
-                    new Subcategoria { Nombre = "Alquiler" }
-                }}
-            }
-        },
-        new GrupoCategoria
-        {
-            Nombre = "Ahorro",
-            Items = new()
-            {
-                new Categoria { Nombre = "Emergencia", Subcategorias = new() {
-                    new Subcategoria { Nombre = "Corto plazo" }
-                }},
-                new Categoria { Nombre = "Retiro", Subcategorias = new() {
-                    new Subcategoria { Nombre = "401(k)" }
-                }}
-            }
-        }
+new GrupoCategoria
+{
+    Nombre = "Gastos",
+    Items = new()
+    {
+        new Categoria { Nombre = "Alimentación", Subcategorias = new() {
+            new Subcategoria { Nombre = "Supermercado" },
+            new Subcategoria { Nombre = "Comidas fuera" },
+            new Subcategoria { Nombre = "Pedido a domicilio" }
+        }},
+        new Categoria { Nombre = "Casa", Subcategorias = new() {
+            new Subcategoria { Nombre = "Hipoteca / Alquiler" },
+            new Subcategoria { Nombre = "Servicios básicos" },
+            new Subcategoria { Nombre = "Mantenimiento" }
+        }},
+        new Categoria { Nombre = "Impuestos", Subcategorias = new() {
+            new Subcategoria { Nombre = "Seguro social" },
+            new Subcategoria { Nombre = "Propiedad" },
+            new Subcategoria { Nombre = "Venta" },
+            new Subcategoria { Nombre = "Estatales" },
+            new Subcategoria { Nombre = "Federales" },
+            new Subcategoria { Nombre = "Municipales" }
+        }},
+        new Categoria { Nombre = "Transportación", Subcategorias = new() {
+            new Subcategoria { Nombre = "Gasolina" },
+            new Subcategoria { Nombre = "Mantenimiento" },
+            new Subcategoria { Nombre = "Transporte público / Uber" }
+        }},
+        new Categoria { Nombre = "Seguros", Subcategorias = new() {
+            new Subcategoria { Nombre = "Salud" },
+            new Subcategoria { Nombre = "Auto" },
+            new Subcategoria { Nombre = "Vida" }
+        }},
+        new Categoria { Nombre = "Regalos y donaciones", Subcategorias = new() {
+            new Subcategoria { Nombre = "Familia" },
+            new Subcategoria { Nombre = "Amigos" },
+            new Subcategoria { Nombre = "Instituciones" }
+        }},
+        new Categoria { Nombre = "Gastos Médicos", Subcategorias = new() {
+            new Subcategoria { Nombre = "Consultas" },
+            new Subcategoria { Nombre = "Medicamentos" },
+            new Subcategoria { Nombre = "Procedimientos" }
+        }},
+        new Categoria { Nombre = "Cuidado Personal", Subcategorias = new() {
+            new Subcategoria { Nombre = "Peluquería" },
+            new Subcategoria { Nombre = "Cosméticos" },
+            new Subcategoria { Nombre = "Spa / Barbería" }
+        }},
+        new Categoria { Nombre = "Dependientes", Subcategorias = new() {
+            new Subcategoria { Nombre = "Cuidado de niños" },
+            new Subcategoria { Nombre = "Cuidado de mayores" },
+            new Subcategoria { Nombre = "Educación" }
+        }},
+        new Categoria { Nombre = "Deuda", Subcategorias = new() {
+            new Subcategoria { Nombre = "Tarjetas de crédito" },
+            new Subcategoria { Nombre = "Préstamos estudiantiles" },
+            new Subcategoria { Nombre = "Otros préstamos" }
+        }},
+        new Categoria { Nombre = "Entretenimiento", Subcategorias = new() {
+            new Subcategoria { Nombre = "Cine" },
+            new Subcategoria { Nombre = "Conciertos" },
+            new Subcategoria { Nombre = "Streaming" }
+        }},
+        new Categoria { Nombre = "Telecomunicaciones", Subcategorias = new() {
+            new Subcategoria { Nombre = "Teléfono" },
+            new Subcategoria { Nombre = "Internet" },
+            new Subcategoria { Nombre = "TV" }
+        }}
+    }
+},
+
+new GrupoCategoria
+{
+    Nombre = "Ahorro",
+    Items = new()
+    {
+        new Categoria { Nombre = "Emergencia", Subcategorias = new() {
+            new Subcategoria { Nombre = "Fondo corto plazo" },
+            new Subcategoria { Nombre = "Fondo largo plazo" },
+            new Subcategoria { Nombre = "Reserva médica" }
+        }},
+        new Categoria { Nombre = "Meta específica", Subcategorias = new() {
+            new Subcategoria { Nombre = "Vacaciones" },
+            new Subcategoria { Nombre = "Auto" },
+            new Subcategoria { Nombre = "Casa" },
+            new Subcategoria { Nombre = "Boda" },
+            new Subcategoria { Nombre = "Educación de hijos" }
+        }},
+        new Categoria { Nombre = "Inversión", Subcategorias = new() {
+            new Subcategoria { Nombre = "Cuenta brokerage" },
+            new Subcategoria { Nombre = "Fondo indexado" },
+            new Subcategoria { Nombre = "Cripto" },
+            new Subcategoria { Nombre = "Crowdfunding" }
+        }},
+        new Categoria { Nombre = "Retiro", Subcategorias = new() {
+            new Subcategoria { Nombre = "IRA / Roth IRA" },
+            new Subcategoria { Nombre = "401(k)" },
+            new Subcategoria { Nombre = "Pensión privada" }
+        }},
+        new Categoria { Nombre = "Ahorro personal", Subcategorias = new() {
+            new Subcategoria { Nombre = "Ahorro mensual" },
+            new Subcategoria { Nombre = "Ahorro en efectivo" },
+            new Subcategoria { Nombre = "Cuenta de ahorro tradicional" }
+        }},
+        new Categoria { Nombre = "Ahorro para hijos", Subcategorias = new() {
+            new Subcategoria { Nombre = "Educación" },
+            new Subcategoria { Nombre = "Regalos futuros" },
+            new Subcategoria { Nombre = "Fondo universitario" }
+        }},
+        new Categoria { Nombre = "Otros", Subcategorias = new() {
+            new Subcategoria { Nombre = "Donaciones planificadas" },
+            new Subcategoria { Nombre = "Proyectos personales" },
+            new Subcategoria { Nombre = "Fondo de libertad financiera" }
+        }}
+    }
+},
     };
 
     bool _modalAbierto = false;
@@ -278,14 +377,17 @@
         _modalAbierto = false;
     }
 
-    void ToggleCategoria(Categoria categoria, GrupoCategoria grupo)
+void ToggleCategoria(Categoria categoria, GrupoCategoria grupo)
+{
+    foreach (var cat in grupo.Items)
     {
-        foreach (var c in grupo.Items)
-            c.Expandida = false;
-
-        categoria.Expandida = true;
+        if (cat != categoria)
+            cat.Expandida = false;
     }
 
+    // Toggle la categoría actual
+    categoria.Expandida = !categoria.Expandida;
+}
 
     async void GuardarSubcategoria()
     {
@@ -306,7 +408,3 @@
         _modalAbierto = false;
     }
 }
-
-
-
-
