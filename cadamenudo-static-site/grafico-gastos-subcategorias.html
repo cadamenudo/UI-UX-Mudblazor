@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gastos Totales</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <style>
+    body {
+      font-family: 'Greycliff CF', sans-serif;
+      background: #fff;
+      padding: 2rem;
+      margin: 0;
+      color: #000;
+    }
+    canvas {
+      max-width: 100%;
+      height: auto !important;
+      margin-bottom: 2rem;
+    }
+    select {
+      font-family: 'Greycliff CF', sans-serif;
+      font-size: 14px;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="graficoDonaGastos" width="280" height="280"></canvas>
+
+<label for="selectorCategoria">Ver subcategorías:</label>
+<select id="selectorCategoria">
+  <option value="alimentacion" selected>Alimentación</option>
+  <option value="casa">Casa</option>
+  <option value="cuidado">Cuidado Personal</option>
+  <option value="dependientes">Dependientes</option>
+  <option value="deuda">Deuda</option>
+  <option value="entretenimiento">Entretenimiento</option>
+  <option value="medicos">Gastos Médicos</option>
+  <option value="impuestos">Impuestos</option>
+  <option value="donaciones">Regalos y Donaciones</option>
+  <option value="seguros">Seguros</option>
+  <option value="telecom">Telecomunicaciones</option>
+  <option value="transporte">Transportación</option>
+</select>
+
+<canvas id="graficoSubcategoria" width="280" height="280"></canvas>
+
+<script>
+  const colores = ['#3956E8', '#7459D9', '#E8C239', '#BA68C8', '#AAB8F2', '#64748B'];
+
+  const centerTextPlugin = {
+    id: 'centerText',
+    beforeDraw(chart) {
+      const { width, height } = chart;
+      const ctx = chart.ctx;
+      const total = chart.config.data.datasets[0].data.reduce((a, b) => a + b, 0);
+
+      ctx.save();
+      ctx.font = 'bold 14px "Greycliff CF", sans-serif';
+      ctx.fillStyle = '#64748B';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Total', width / 2, height / 2 - 12);
+
+      ctx.font = 'bold 20px "Greycliff CF", sans-serif';
+      ctx.fillStyle = '#000';
+      ctx.fillText(`$${total.toLocaleString()}`, width / 2, height / 2 + 12);
+      ctx.restore();
+    }
+  };
+
+  const categoriasGasto = {
+    labels: ['Alimentación', 'Casa', 'Cuidado Personal', 'Deuda', 'Entretenimiento', 'Impuestos'],
+    data: [1200, 900, 400, 600, 350, 450]
+  };
+
+  const subcategorias = {
+    alimentacion: { labels: ['Supermercado', 'Comidas fuera', 'Café'], data: [800, 300, 100] },
+    casa: { labels: ['Hipoteca', 'Servicios', 'Mantenimiento'], data: [500, 250, 150] },
+    cuidado: { labels: ['Higiene', 'Peluquería'], data: [250, 150] },
+    dependientes: { labels: ['Escuela', 'Ropa', 'Cuidado niños'], data: [400, 200, 150] },
+    deuda: { labels: ['Tarjetas', 'Préstamos'], data: [350, 250] },
+    entretenimiento: { labels: ['Cine', 'Streaming'], data: [200, 150] },
+    medicos: { labels: ['Seguro', 'Copagos'], data: [300, 150] },
+    impuestos: { labels: ['Federal', 'Propiedad'], data: [300, 150] },
+    donaciones: { labels: ['ONG', 'Familia'], data: [200, 150] },
+    seguros: { labels: ['Auto', 'Vida'], data: [250, 150] },
+    telecom: { labels: ['Internet', 'Celular'], data: [100, 80] },
+    transporte: { labels: ['Gasolina', 'Mantenimiento'], data: [200, 100] }
+  };
+
+  // Dona principal
+  new Chart(document.getElementById('graficoDonaGastos').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: categoriasGasto.labels,
+      datasets: [{
+        data: categoriasGasto.data,
+        backgroundColor: colores
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          titleColor: '#000',
+          bodyColor: '#000',
+          borderWidth: 1,
+          borderColor: '#ccc',
+          callbacks: {
+            label: ctx => `${ctx.label}: $${ctx.formattedValue}`
+          }
+        }
+      }
+    },
+    plugins: [centerTextPlugin]
+  });
+
+  // Subcategorías
+  let chartSub = new Chart(document.getElementById('graficoSubcategoria').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: subcategorias['alimentacion'].labels,
+      datasets: [{
+        data: subcategorias['alimentacion'].data,
+        backgroundColor: colores
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '60%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#fff',
+          titleColor: '#000',
+          bodyColor: '#000',
+          borderWidth: 1,
+          borderColor: '#ccc',
+          callbacks: {
+            label: ctx => `${ctx.label}: $${ctx.formattedValue}`
+          }
+        }
+      }
+    },
+    plugins: [centerTextPlugin]
+  });
+
+  // Cambio dinámico de subcategoría
+  document.getElementById('selectorCategoria').addEventListener('change', function () {
+    const key = this.value;
+    if (subcategorias[key]) {
+      chartSub.data.labels = subcategorias[key].labels;
+      chartSub.data.datasets[0].data = subcategorias[key].data;
+      chartSub.update();
+    }
+  });
+</script>
+
+</body>
+</html>
