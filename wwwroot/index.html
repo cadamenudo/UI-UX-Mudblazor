@@ -5,23 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>El Menudo Cuenta</title>
   <base href="/" />
+
+  <!-- Estilos personalizados -->
   <link rel="stylesheet" href="css/grafico-metas.css" />
-    <link rel="stylesheet" href="css/grafico-ingresos-gastos.css" />
-    <link rel="stylesheet" href="css/grafico-ingresos-totales.css" />
-    <link rel="stylesheet" href="css/grafico-gastos-totales.css" />
+  <link rel="stylesheet" href="css/grafico-ingresos-gastos.css" />
+  <link rel="stylesheet" href="css/grafico-ingresos-totales.css" />
+  <link rel="stylesheet" href="css/grafico-gastos-totales.css" />
 </head>
 <body>
-  <app>Loading...</app>
+  <div id="app">Cargando...</div>
 
+  <!-- Framework Blazor -->
   <script src="_framework/blazor.webassembly.js"></script>
 
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Script personalizado para el gráfico de metas -->
+  <!-- Scripts personalizados -->
   <script src="js/grafico-metas.js"></script>
   <script src="js/grafico-ingresos-gastos.js"></script>
   <script src="js/grafico-ingresos-totales.js"></script>
-<script src="js/grafico-gastos-totales.js"></script>
+  <script src="js/grafico-gastos-totales.js"></script>
 </body>
 </html>
