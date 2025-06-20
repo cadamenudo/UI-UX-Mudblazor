@@ -1,0 +1,14 @@
+@page "/grafico-metas"
+@inject IJSRuntime JS
+
+<canvas id="graficoMetas" height="250"></canvas>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("dibujarGraficoMetas");
+        }
+    }
+}
