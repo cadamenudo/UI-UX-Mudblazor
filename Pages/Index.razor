@@ -1,3 +1,4 @@
+@using System.Globalization
 
 <style>
   .greycliff {
@@ -44,30 +45,96 @@
     margin-bottom: 1.25rem;
   }
 
+.resumen-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.resumen-icono {
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.resumen-texto {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  align-items: flex-start;
+}
+
+.resumen-texto span:first-child {
+  font-size: 0.85rem;
+}
+
+.resumen-monto {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* 👇 VERSIÓN MÓVIL */
+@@media (max-width: 480px) {
   .resumen-item {
-    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    text-align: center;
   }
 
   .resumen-icono {
-    width: 40px;
-    height: 40px;
-    background: #ffffff;
-    border-radius: 50%;
-    padding: 6px;
+    display: none;
   }
 
-  .resumen-texto {
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
+  .resumen-texto span:first-child {
+    font-size: 0.75rem;
   }
 
   .resumen-monto {
-    font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
+}
+
+.footer-menu {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  text-align: center;
+  align-items: center;
+  font-size: 0.75rem;
+  gap: 0.25rem;
+}
+
+.footer-menu img {
+  height: 28px;
+  width: auto;
+  margin-bottom: 4px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-menu .registrar-icono {
+  height: 32px;
+  width: auto;  /* 👈 mantiene aspecto natural */
+  margin-bottom: 4px;
+}
+
+.footer-menu .registrar-texto {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
 </style>
 
 <MudThemeProvider />
@@ -86,22 +153,22 @@
 <MudContainer MaxWidth="MaxWidth.Large" Class="pa-4 greycliff">
 
   <!-- 🔸 Resumen -->
-  <MudPaper Class="resumen-box">
-    <MudGrid>
-      @foreach (var item in Resumen)
-      {
-        <MudItem Xs="4">
-          <div class="resumen-item">
-            <img src="@item.Icon" class="resumen-icono" />
-            <div class="resumen-texto">
-              <span>@item.Nombre</span>
-              <span class="resumen-monto">@item.Valor</span>
-            </div>
+<MudPaper Class="resumen-box">
+  <MudGrid GutterSize="3" Justify="Justify.SpaceBetween">
+    @foreach (var item in Resumen)
+    {
+      <MudItem Xs="4" Style="min-width: 0;">
+        <div class="resumen-item">
+          <img src="@item.Icon" class="resumen-icono" />
+          <div class="resumen-texto">
+            <span>@item.Nombre</span>
+            <span class="resumen-monto">@item.Valor</span>
           </div>
-        </MudItem>
-      }
-    </MudGrid>
-  </MudPaper>
+        </div>
+      </MudItem>
+    }
+  </MudGrid>
+</MudPaper>
 
   <!-- 🔹 Superávit -->
 <MudAlert Severity="Severity.Success" Dense="true" Class="my-2 mb-3">
@@ -114,7 +181,7 @@
         <MudDatePicker Label="Desde"
                        @bind-Date="FechaDesde"
                        DateFormat="dd/MM/yyyy"
-                       Culture="es-ES"
+                       Culture="@culturaES"
                        AnchorOrigin="Origin.TopLeft"
                        TransformOrigin="Origin.TopLeft" />
     </MudItem>
@@ -122,7 +189,7 @@
         <MudDatePicker Label="Hasta"
                        @bind-Date="FechaHasta"
                        DateFormat="dd/MM/yyyy"
-                       Culture="es-ES"
+                       Culture="@culturaES"
                        AnchorOrigin="Origin.TopRight"
                        TransformOrigin="Origin.TopRight" />
     </MudItem>
@@ -163,34 +230,28 @@
 </div>
 
 <!-- 🔹 Footer -->
-<footer class="navbar greycliff" style="background-color: #594AE2; padding: 1rem 0;">
-  <div style="display: grid; grid-template-columns: repeat(5, 1fr); text-align: center; align-items: center;">
-    
+<footer class="navbar greycliff" style="background-color: #594AE2; padding: 0.75rem 0;">
+  <div class="footer-menu">
     <div style="color: white;">
-      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/home.png" style="width: 28px;" />
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/home.png" alt="Home" />
       <div>Tablero</div>
     </div>
-
     <div style="color: white;">
-      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones.png" style="width: 28px;" />
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones.png" alt="Transacciones" />
       <div>Transacciones</div>
     </div>
-
     <div style="color: white;">
-      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/nueva.png" style="width: 32px;" />
-      <div style="font-weight: 600; margin-top: 4px;">Registrar</div>
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/nueva.png" alt="Registrar" class="registrar-icono" />
+      <div class="registrar-texto">Registrar</div>
     </div>
-
     <div style="color: white;">
-      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/metas.png" style="width: 28px;" />
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/metas.png" alt="Metas" />
       <div>Metas</div>
     </div>
-
     <div style="color: white;">
-      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/buscar.png" style="width: 28px;" />
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/buscar.png" alt="Buscar" />
       <div>Buscar</div>
     </div>
-    
   </div>
 </footer>
 
@@ -198,6 +259,8 @@
   private DateTime? FechaDesde = new DateTime(2025, 1, 1);
   private DateTime? FechaHasta = new DateTime(2025, 5, 31);
   private string Superavit = "1,868.77";
+
+  private CultureInfo culturaES = new("es-ES");
 
   private List<(string Nombre, string Valor, string Icon)> Resumen = new()
   {
